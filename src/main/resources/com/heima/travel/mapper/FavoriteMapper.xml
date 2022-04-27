@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.heima.travel.mapper.FavoriteMapper">
+
+    <select id="findFavorityByRouteIdAndUserId" resultType="favorite">
+        select * from tab_favorite where rid=#{rid} and uid=#{uid}
+    </select>
+
+    <update id="addFavorite">
+        insert into tab_favorite values(#{rid},now(),#{uid})
+    </update>
+
+    <resultMap id="favoriteMap" type="favorite" autoMapping="true">
+        <id column="rid" property="rid"/>
+        <id  column="uid" property="uid"/>
+        <result column="date" property="date"/>
+        <!--映射路线信息-->
+        <association property="route" javaType="route" autoMapping="true">
+            <!--route部分封装-->
+            <id column="rid" property="rid"/>
+            <result column="rname" property="rname"/>
+            <result column="price" property="price"/>
+            <result column="routeIntroduce" property="routeIntroduce"/>
+            <result column="rflag" property="rflag"/>
+            <result column="rdate" property="rdate"/>
+            <result column="isThemeTour" property="isThemeTour"/>
+            <result column="count" property="count"/>
+            <result column="cid" property="cid"/>
+            <result column="sid" property="sid"/>
+            <result column="rimage" property="rimage"/>
+            <result column="sourceId" property="sourceId"/>
+        </association>
+    </resultMap>
+    <select id="findFavoriteByPage" resultMap="favoriteMap">
+        select * from
+          tab_favorite as fav,
+          tab_route as ro
+        where
+            fav.rid = ro.rid
+            and uid = #{uid}
+    </select>
+
+</mapper>
